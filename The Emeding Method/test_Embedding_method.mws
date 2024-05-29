@@ -1,0 +1,267 @@
+{VERSION 6 0 "IBM INTEL NT" "6.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Monospaced" 1 12 255 0 0 1 2 1 
+2 2 1 2 0 0 0 1 }{CSTYLE "2D Output" -1 20 "Times" 1 12 0 0 255 1 2 2 
+2 2 2 2 0 0 0 1 }{PSTYLE "Normal" -1 0 1 {CSTYLE "" -1 -1 "Times" 1 
+12 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 2 0 2 0 2 2 0 1 }{PSTYLE "
+Text Output" -1 6 1 {CSTYLE "" -1 -1 "Courier" 1 10 0 0 255 1 2 2 2 2 
+2 1 2 1 3 1 }1 1 0 0 0 0 1 0 1 0 2 2 0 1 }{PSTYLE "Maple Output" -1 
+11 1 {CSTYLE "" -1 -1 "Times" 1 12 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }3 1 0 
+0 0 0 2 0 2 0 2 2 0 1 }{PSTYLE "Maple Output" -1 12 1 {CSTYLE "" -1 
+-1 "Times" 1 12 0 0 0 1 2 2 2 2 2 2 1 1 1 1 }1 1 0 0 0 0 2 0 2 0 2 2 
+0 1 }}
+{SECT 0 {EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 62 "#this file should be
+ opened and run by classic worksheet maple" }}}{EXCHG {PARA 0 "> " 0 "
+" {MPLTEXT 1 0 294 "restart;\nwith(LinearAlgebra):with(DETools):with(V
+ectorCalculus): with(Groebner):\nwith(PDEtools): with(Optimization): w
+ith(RandomTools):\nDigits:= 30:\nread \"PryceMethod.txt\": read \"Mapl
+etoPhc.txt\": read \"Hom_Maple.txt\":   read \"GCP.txt\":read \"EMdsol
+ve.txt\":\n\n#remark: homp4s2 should be installed." }}}{EXCHG {PARA 0 
+"> " 0 "" {MPLTEXT 1 0 140 "eqn := [2*y(t)*(diff(x(t), t))-x(t)*(diff(
+y(t), t))-x(t)+sin(t)+2, y(t)-x(t)^2];\n\nvar := [x, y]; invar := t; t
+0 := 0; \n                    \n" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%
+$eqnG7$,,*(\"\"#\"\"\"-%\"yG6#%\"tGF)-%%diffG6$-%\"xGF,F-F)F)*&F1F)-F/
+6$F*F-F)!\"\"F1F6-%$sinGF,F)F(F),&F*F)*$)F1F(F)F6" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#>%$varG7$%\"xG%\"yG" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#
+>%&invarG%\"tG" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%#t0G\"\"!" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 39 "soln := EMdsolve(eqn, var, i
+nvar, t0);\n" }}{PARA 6 "" 1 "" {TEXT -1 0 "" }}{PARA 12 "" 1 "" 
+{XPPMATH 20 "6#7%,**(\"\"#\"\"\"-%%diffG6$-%$xx2G6#%\"tGF.F'-%(subvar1
+GF-F'F'*(F&F'F+F'-F)6$F/F.F'F'*&\"$,\"F'-F)6$-%$xx1GF-F.F'!\"\"-%$cosG
+F-F',&*(F&F'F6F'F/F'F:*(F&F'F8F'F2F'F:,&F(F'*(F&F'F8F'F6F'F:" }}{PARA 
+11 "" 1 "" {XPPMATH 20 "6#>%%solnG7#f*6#%(x_rkf45G6+%%_resG%%_datG%&_v
+arsG%*_solnprocG%&_xoutG%'_ndsolG%&_parsG%#_nG%#_iG6#%inCopyright~(c)~
+2000~by~Waterloo~Maple~Inc.~All~rights~reserved.G6\"C-@$2\"\"\"9#YQBin
+valid~input:~too~many~argumentsF5>%8_EnvDSNumericSaveDigitsG%'DigitsG>
+F?\"#I@%/%-_EnvInFsolveG%%trueG>8(-&%&evalfG6#F>6#9$>FG-FJFL>8%X,%)any
+thingG6\"F5[gl!!%!!!\"%\"%!!f*6#%%_xinG65%&_xoutG%&_dtblG%%_datG%&_vma
+pG%$_x0G%$_y0G%%_valG%%_digG%#_nG%$_neG%$_ndG%$_nvG%&_parsG%%_iniG%%_p
+arG%#_iG%#_jG%#_kG%%_srcG6#%inCopyright~(c)~2002~by~Waterloo~Maple~Inc
+.~All~rights~reserved.GE\\s\"Q(complex6\"%&falseGC9>8$9$>807\">8%=Fjo6
+#;F9\"\"%E\\[l\"F9=Fjo6#;F9\"#?E\\[l5F96%/%)datatypeG%'sfloatG/%&order
+G%(C_orderG/%(storageG%,rectangularG\"\"#F_q\"\"$7&\"\"!F\\rF\\rX0Fbq6
+#F]rFjo[gl!!%\"!!#!\"!\"#!!!!\"\"&X,Fbq6#F`rFjo[gl!!%\"!!\"=\"=!!$F\\r
+F\\r$F9!\"'Fbr$\"',+]!#NFbr$\"?I?Jvh`k%ePZA]Q<&!#JFbrFcrFbrFbrFbrFbr$F
+9F\\rFbr$\"/************\\!#9FbrF[sF[sFbrFbrF[sF[sFbrFbr$F9!#:FbrFbrFb
+rFhpX,%)anythingG6#FasFjo[gl%!%!!!\"V\"V!!$$!!!!\"!!!!!!!!!!\"[^`r!\"
+\"%!#?\"!\"$$!\"!!!!!!!!!\"!!!!!!S\"!!\"\"(7)X0Fbq6#FfsFjo[gl!!%\"!!#=
+\"%\"(!!!!Fbr$\"#EF\\r$\"#RF\\r$\"#'*F\\r$\"$/\"F\\r$\"#_F\\rF^t$\"&SM
+$F\\rFbr$\"'Kk9F\\r$\"'0G9F\\r$!&(y]F\\r$\"&g-\"F\\r$\"']@GF\\r$\"%X5F
+\\rFbr$!&k7\"F\\r$!&&)4\"F\\r$\"%CvF\\r$\"&!o8F\\r$\"'+iPF\\r$\"(b\"H;
+F\\rFbr$\"(k'pnF\\r$\"'N0MF\\r$!'u:5F\\r$!'!G+)F\\r$\")+D18F\\rX0Fbq6#
+FfvFjo[gl!!%\"!!#E\"'\"'!!!!FbrFbrFbrFbrFbrF[sF[sFbrFbrFbrFbr$FhpF\\r$
+FjqF\\r$\"\"*F\\rFbrFbrFbr$\"#KF\\r$\"%K>F\\r$!%+sF\\r$\"%'H(F\\rFbrFb
+r$\"%(>#F\\r$\"%T$)F\\r$!&KG$F\\r$\"&S%HF\\r$!$X)F\\rFbr$\"%/TF\\r$!%!
+3'F\\r$\"&S5%F\\r$!&_$GF\\r$\"%&H*F\\r$!%VcF\\r$\"&?0#F\\rX,Fbq6#F\\yF
+jo[gl!!%\"!!\"'\"'!!Fbr$\"$'Q!\"$$\"$5#F`y$\"$I'F`yF[sF[sX,Fbq6#FeyFjo
+[gl!!%\"!!\"'\"'!!$\"#D!\"#$!%V5!\"%$\"%N5F\\z$!$i$F\\zFbrFbrX0Fbq6#Fa
+zFjo[gl!!%\"!!#?\"'\"&!!!!FbrFbrFbrFbrFbr$\"?+++++++++++++W:!#HFbrFbrF
+brFbr$\"?U6n#4\\hG`:3G&ym%*!#I$\"?7oDq)oj6e#)*)p6qb#FhzFbrFbrFbr$\"?O`
+hR'ye&)[oq=D[J$Fez$\"?BG(4\\^_J7sf,Ch*GFez$\"?)H&z/tqD2y(*R\">k)**FhzF
+brFbr$\"??Tu]ZO#[FE#4XA@7Fez$\"?9cO=$\\0Hv(G\"[M\">gFez$\"?K)\\Mx@du3K
+HL3PD\"!#G$!?9k?*)[lN^*e5Og)yoFhzFbrFa[lFc[lFe[lFh[lF[sX0Fbq6#Fj[lFjo[
+gl!!%\"!!#?\"'\"&!!!!FbrFbrFbrFbrFbr$!?++++++++++++!)ocFezFbrFbrFbrFbr
+$!?f[zoF^=eP$oN$4ICFez$!?BgLZNkOA\"*3d\"*fj?FhzFbrFbrFbr$!?NjVrQX=i_9e
+!HN2\"Fhz$!?+AnFV&>V*=-^Ac%f*Fez$!??4T>x5[:'4[hGq/#Fg[lFbrFbr$\"?Mr')G
+5e-:'oRJVk\\(Fez$!?Eti+G=$=7k9V!oC5Fg[l$!?=yTaS*\\j!*>GN!***R$Fg[l$\"?
+sFA99Qafh?$*3*3<\"Fg[lFbr$\"?oH1&\\3H4TAfzYK3)Fez$!?>U+#))Hyayi!))H8\"
+)zFez$!?&yX@MW0HPuGVf@:$Fg[l$\"?Lt-W#H*=OJ7V0$>j\"Fg[l$!?YRbYqKw`S$)Q#
+=)egFezX0Fbq6#Fj]lFjo[gl!!%\"!!#0\"$\"&!!!!FbrFbrFbrFbrFbr$\"?x@Y84d?
+\"pW$3Ni75Fg[l$!?*)>YjBL8Lwgxe*z[(Fez$!?#)QMm\"zR6ub:'=4![$Fg[l$!?f3f+
+zrLF(ovqrF*zFez$\"?:Zc!eRW1i&HBx8D5Fez$!?nftf'Gqx*o!GR.Gw'Fhz$\"?'>pMV
+>Ykgy;l9x3'Fez$\"?(HMQ%)okIY#*3K%3V;Fg[l$\"?^_yS'HD^O=9^AnZ#Fg[l$!?*)[
+/YW7h\"y;d7*Q%f'Fez\"\"'X,Fbq6#Fa_lFjo[gl!!%\"!!\"$\"$!!$\",+++++#!#5$
+\",+++++%Fe_l$\",++++]#!\"*\"#57*f*6&%\"NG%\"XG%\"YG%#YPGFjo6#%R[Y[1]~
+=~xx1(t),~Y[2]~=~xx2(t),~Y[3]~=~subvar1(t)]GFjoC&>&9'6#F9,$*(-%$cosG6#
+9%F9&9&Fi`lF9,(*&F`alFiq&Faal6#FjqF9!\")*&&Faal6#FiqF9FdalF9FhpF`al\"$
+-#!\"\"Fiq>&Fh`lFial,$*(F\\alF9F`alFiqFbalF[blFhp>&Fh`lFeal*(FdalF9F\\
+alF9,(*&F`alFiqFdalF9Fhp*&FhalF9FdalF9FiyF`al!$,\"F[blF\\rFjoFjoFjoF[b
+lF\\rF\\rF\\rF\\rF\\rF\\r\"#6X0Fbq6#FhblFjo[gl!!%\"!!#9\"'!$!!!!FbrFbr
+FbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbr\"\"
+)7%X,Fbq6#F\\clFjo[gl!!%\"!!\"$\"$!!FbrFbrFbrX,Fbq6#F^clFjo[gl!!%\"!!
+\"$\"$!!FbrFbrFbrX,Fbq6#F`clFjo[gl!!%\"!!\"$\"$!!$\"?++++++++++++++5Fe
+z$\"?++++++++++++++SFez$!?+++++++++++++]7Fg[lF[w7/X,Fbq6#FiclFjo[gl!!%
+\"!!\"$\"$!!$FcclFhzF[dlF[dlX,Fbq6#F\\dlFjo[gl!!%\"!!\"$\"$!!FbrFbrFbr
+X,Fbq6#F^dlFjo[gl!!%\"!!\"$\"$!!FbrFbrFbrX,Fbq6#F`dlFjo[gl!!%\"!!\"$\"
+$!!FbrFbrFbrX,Fbq6#FbdlFjo[gl!!%\"!!\"$\"$!!FbrFbrFbrX0Fbq6#FddlFjo[gl
+!!%\"!!#*\"$\"$!!!!FbrFbrFbrFbrFbrFbrFbrFbrFbrX0Fbq6#FfdlFjo[gl!!%\"!!
+#*\"$\"$!!!!FbrFbrFbrFbrFbrFbrFbrFbrFbrX0Fbq6#FhdlFjo[gl!!%\"!!#3\"$\"
+'!!!!FbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrFbrX,Fbs6#Fjdl
+Fjo[gl%!%!!!\"$\"$!!!!!X,Fbq6#F\\elFjo[gl!!%\"!!\"$\"$!!Fc_lFf_lFh_lX,
+Fbq6#F^elFjo[gl!!%\"!!\"$\"$!!FbrFbrFbrX,Fbq6#F`elFjo[gl!!%\"!!\"$\"$!
+!FbrFbrFbrX,Fbq6#FbelFjo[gl!!%\"!!\"$\"$!!FbrFbrFbr\"#:Q&rkf45Fjo\"#97
+$F\\rF\\r\"#8Fjo\"#7FjoF]qFbp\"#;7&F\\rF\\rF\\rFbp\"#<F\\`l\"#=Fbp\"#>
+F\\r>8)X,Fbs6#FaflFjo[gl!!%!!!\"%!$!!FbrFc_lFf_lFh_l>8'=Fjo6#;F9FjqE\\
+[l$F9F9FiqFiqFjqFjq>8(&&&FdpFi`l6#F_rF^gl>8,&&F]gl6#FhpFi`l>8-&FbglFea
+l>8.&FbglFcgl>8/&Fbgl6#Fjel@$4-%%typeG6$F^p.%(numericG@Q-%'memberG6$F^
+p7%Q&startFjoQ%leftFjoQ&rightFjoC$@$5/%:_Env_smart_dsolve_numericG%%tr
+ueG/&Fbgl6#F[`lF9@&/F^pF[il@$-Fahl6$&FdpFial.%&tableGO&&F[jlF^glFi`l/F
+^pF\\il@$-Fahl6$&FdpFealF\\jlO&&FejlF^glFi`lOF[gl/F^pQ'methodFjoO&F]gl
+6#Fdel/F^pQ(storageFjoO-%&evalbG6#Fcil/F^pQ)leftdataFjo@%4-Fahl6$F[jl.
+%&arrayGO%%NULLGO-%%evalG6#F[jl/F^pQ*rightdataFjo@%4-Fahl6$FejlF[\\mOF
+^\\mO-Fa\\m6#Fejl/F^pQ+enginedataFjoO-Fa\\m6#F]gl/F^pQ,engineresetFjoC
+%>F[jl-%&evalnGFb\\m>Fejl-Fg]mF\\]mOF^\\m/F^pQ(initialFjoO-9!6#&F`fl6#
+F\\r/F^pQ'laxtolFjoO&&&Fdp6#-%#ifG6%-Fghl6$&FdpFcgl<$FiqFjqF__mF9F^gl6
+#F]fl/F^pQ'numfunFjoO-F[_m6%F]_m&&&Fdp6#F__mFcglFa_mF\\r/F^pQ+paramete
+rsFjoO7#-%$seqG6$&F`fl6#,&F`glF983F9/Fe`m;F9-%%nopsG6#Fap/F^pQ7initial
+_and_parametersFjoO6$F^^mF^`m/F^pQ%lastFjo@%530F__mFiq0F__mFjq/,&FjflF
+9&&Fi_mF^glFi`lF[blFbrYQSno~information~is~available~on~last~computed~
+pointFjo>F^pFham/F^pQ)functionFjo@%/,&&Fbgl6#\"#LF9$FiyF\\rF9F\\rO-Fa
+\\m6$&F]glFeilF9O-Fa\\m6$&FibmFi`lF9/F^pQ$mapFjoO-%%copyG6#Fdfl33-Fahl
+6$F_p%\"=G-Fahl6$-%$rhsG6#F_p.%%listG-Fghl6$-%$lhsGF]dm<%F\\^mF\\`mF\\
+amC*>6$81826$FbpFbp@+/FbdmF\\^m>FhdmF[dm/FbdmF\\`m>FidmF[dm0-%'selectG
+6%FahlF[dmFhcmFbp>6$FidmFhdm-%-selectremoveGFcem2-Fi`m6#F[dm,&Fh`mF9F9
+F9YQhninsufficient~data~for~specification~of~initial~and~parametersFjo
+C$>Fidm&F[dm6#;,$Fh`mF[blF[bl>Fhdm&F[dm6#;F9,&Fh`mF[blF[blF9>F^p-Fcdm6
+#F^p@$0FidmFbp-%Bdsolve/numeric/process_parametersG6&F`glFapFidmF`fl@$
+0FhdmFbp-%?dsolve/numeric/process_initialG6',&F`glF9FeglF[blFhdmF`flFa
+pFdfl-%?dsolve/numeric/SC/reinitializeG6'FdpF`flF`glF_^mFap@$33F`il-Fa
+hl6$Fa^mFchl0FdilF9C$>-F_^m6#F\\ilFa^m>-F_^m6#F[ilFa^m@'F[^mO7$Fa^m-F`
+`m6$&F`fl6#&Fdfl6#Fe`m/Fe`m;F9FfgmF[`mOF^`mO6$FihmF^`m/F_pQ*eventstopF
+joC&@$/F[hlF\\rYQ<this~solution~has~no~eventsFjo>Fe`mF__m@$30Fe`mFiq0F
+e`mFjqOF\\r@'333/&&&FdpF_imFcglFeilF9-%)assignedG6#&Fdp6#,&F_rF9Fe`mF[
+bl2&Fhjm6#F[wF[`l1F[`l&&F][nFcglFb[nC&>Fe`mF_[n>F__mFe`m>84-%&roundG6#
+&Fhjm6#F\\flO-F\\\\n6#&&&FijmFealFi`l6$Fj[nF91F[`lFa[nC$>Fj[nF[\\nOFa
+\\nOF\\r/F_pQ,eventstatusFjoC%@$FiimYF[jm>Fe`m7#-Fgem6$f*6#%\"aGFjo6$%
+)operatorG%&arrowGFjo/&&&&T#Fi`lFealFi`l6$F_pFdsF9FjoFjo6$FZFdp<#-F``m
+6$Fj[n/Fj[n;F9-F\\\\n6#&&&F]glFealFi`l6$,&F[hlF9F9F9F9O6$/._Fjo%(enabl
+edG&Fe`mFi`l/._Fjo%)disabledG&Fe`mFial/F_pQ+eventclearFjoC(@$FiimYF[jm
+>Fe`mF__m@$F^jmYQ3no~events~to~clearFjo@$3Fdjm2F[`lFd[nC$>F__mF_[n>Fe`
+mF_[n@'F`[nYFc`n2F[hl,&Fa[nF9Fe_lF9YQHevent~error~condition~cannot~be~
+clearedFjoC)>Fj[nF]an@$/-%%iremG6$-F\\\\n6#&Fd\\n6$Fj[nFhpFiqF9YQGretr
+iggerable~events~cannot~be~clearedFjo>Fj[nFa\\n?(85F9F9F[hlFbil@$/&Fd
+\\n6$F_bnF9Fj[nC$@$/&Fd\\n6$F_bnFiqFjqYQ?range~events~cannot~be~cleare
+dFjo>&Fd\\n6$F_bnFjbl&Fd\\n6$F^_nFjbl>F^\\nF\\r>Fa[nF\\r@$Fcil@%/Fe`mF
+iqZ%-F_^m6#FehmFjoFjoZ%-F_^m6#FbhmFjoFjoOFjo3Ffcm-Fghl6$Fbdm<$Q-eventd
+isableFjoQ,eventenableFjoC*@$FiimYF[jm@'-Fahl6$F[dm<$-F^dm6#.%'posintG
+-.%$setGFjdn>Fe`m<#-%#opGFjem-Fahl6$F[dmF[en>Fe`m<#F[dmY6$QVevent~iden
+tifiers~must~be~integers~in~the~range~1..%1FjoFh^n@$0-Fbem6$f*Ff]nFjoF
+h]nFjo2F`^nF_pFjoFjo6$F^oF[hlFe`m<\"YFien>F_bnFbfn?(Fj[nF9F9F[hlFbil@$
+-Fghl6$-F\\\\n6#&F[_nFf\\nFe`m>F_bn-%&unionG6$F_bn<#Fj[n>Fe`mF_bn@%/Fb
+dmF`dnC'>F__mF\\r>Fj[n7$-Fc[m6#3-F[[nFb\\m-Fghl6$&&F[jlFcglF_\\nFe`m-F
+c[m6#3-F[[nF\\]m-Fghl6$&&FejlFcglF_\\nFe`m?&F_bnFe`mFbilC%>&F[_n6$F_bn
+FdsF\\r@$F[hn>&&&F[jlFealFi`lF\\inF\\r@$Fchn>&&&FejlFealFi`lF\\inF\\r@
+$&Fj[nFi`lC&?(F_bnF9F9F^_nFbil@)31F_bnF[hl4-Fahl6$&&FainFcglFcbn.%*und
+efinedGC$-%)userinfoG6(Fjq<$.%'eventsG.%+eventresetG%7reinit~#2,~event
+~code~GF_bn%2~to~defined~init~GFajn>&F`inF]cnFajn3/&F`inFhbnF\\r/-Fean
+6$-%%iquoG6$-F\\\\n6#&F`in6$F_bnFhpF]wFiqF9C$-Fgjn6(FjqFijnF^[oF_bn%:~
+to~rate~hysteresis~init~G&F`jl6#\"#C>Fa[oFc\\o3Fc[o/-Fean6$-Fi[o6$F[\\
+oFiqFiqF\\rC$-Fgjn6(FjqFijnF^[oF_bn%2~to~initial~init~GFjfl>Fa[oFjflC$
+-Fgjn6(FjqFijnF^[oF_bn%6~to~fireinitial~init~G,&FjflF9F[blF9>Fa[oFf]o>
+F^hnF\\r>&F_hnFb[nF\\r@$FcilFfcn@$&Fj[nFialC&?(F_bnF9F9F^_nFbil@)3F]jn
+4-Fahl6$&&FfinFcglFhbnFcjnC$-Fgjn6(FjqFijn%7reinit~#3,~event~code~GF_b
+nF_[oFe^o>&FeinF]cnFe^o3/&FeinFhbnF\\r/-Fean6$-Fi[o6$-F\\\\n6#&FeinF^
+\\oF]wFiqF9C$-Fgjn6(FjqFijnFj^oF_bnFb\\o&FhjlFd\\o>F\\_oF[`o3F^_o/-Fea
+n6$-Fi[o6$Fe_oFiqFiqF\\rC$-Fgjn6(FjqFijnFj^oF_bnF`]oFjfl>F\\_oFjflC$-F
+gjn6(FjqFijnFj^oF_bnFe]o,&FjflF9F9F9>F\\_oFj`o>FfhnF\\r>&FghnFb[nF\\r@
+$FcilFicnC'?&F_bnFe`mFbil>F[inF9>F[jlFf]m>FejlFi]m>F__mF\\r@$FcilC$@$1
+FjflFbhmZ%FicnFjoFjo@$1FehmFjflZ%FfcnFjoFjoOFjo3Ffcm/FbdmQ+eventfiredF
+joC*@$4FicmYQI'eventfired'~must~be~specified~as~a~listFjo@$FiimYF[jm@$
+FcamYQhn'direction'~must~be~set~prior~to~calling/setting~'eventfired'F
+jo>Fe`mF__m>8*F^\\m@$4-F[[n6#%9_EnvEventRetriggerWarnedG>FccoF[p?&F_bn
+F[dmFbilC*@'-Fahl6$F_bn.%(integerG>86F_bn3-Fahl6$F_bn/Fjco.Fbs-Fahl6$-
+%&evalfG6#-F\\dm6#F_bnFchlC$>F_bn/-FcdmFido-&Ffdo6#-%$maxG6$%'DigitsGF
+]flFgdo>F]doF]eoY6$QD'eventfired'~entry~is~not~valid:~%1FjoF_bn@$52F]d
+oF92Fh^nF]doYFien>F]do<#-F``m6$-F[_m6%/,&F[gnF9F]doF[blFbrFj[nF^\\m/Fj
+[n;F9F[hl@$0-Fi`m6#F]doF9YQ`p'eventfired'~can~only~be~set/queried~for~
+root-finding~events~and~time/interval~eventsFjo>F]do&F]doFi`l@&30&F[_n
+6$F]doFiqFbr0,&FcgoF9FebmF9FbrYF]go/-Fean6$-F\\\\n6#&F[_n6$F]doFhpFiqF
+9C$@$/FccoF[p-%(WARNINGG6#%T'eventfired'~has~no~effect~on~events~that~
+retriggerG>FccoFbil@'3/&Fd\\nFdgoF\\r/-Fean6$-Fi[o6$-F\\\\n6#&Fd\\nF^h
+oF]wFiqF9>F^co6$F^coFdjn55-Fahl6$&&Fe\\nFcgl6$F]do,&Fe`mF9F[blF9Fcjn3F
+dcn2&F`in6$F]doFjbl&Fbjn6$F]doF93/Fe`mFjq2&Ff^oFdgo&FeinF`jo>F^co6$F^c
+o&Fd\\nF`jo>F^co6$F^coFiio@$-Fahl6$F_bnFhcmC&@$FhhoYQRcannot~set~event
+~code~for~a~rate~hysteresis~eventFjo-Fgjn6(FjqFijn%7manual~set~event~c
+ode~GF]do%+~to~value~GFhdo>FjjoFhdo>FiioFhdoO7#F^co3Ffcm/FbdmQ*directi
+onFjoC)@$4-Fghl6$F[dm<&F[blF9._Fjo%%leftG._Fjo%&rightGYQip'direction'~
+must~be~specified~as~either~'1'~or~'right'~(positive)~or~'-1'~or~'left
+'~(negative)Fjo>F]do-F[_m6%/F__mFiqF[bl-F[_m6%/F__mFjqF9Fdjn>Fe`m-F[_m
+6%-Fghl6$F[dm<$F9Fh\\pFjqFiq>F__mFe`m>Fijm-%;dsolve/numeric/SC/IVPdcop
+yG6$F]gl-F[_m6%-F[[n6#FijmFijmF^\\m@$2F\\rF[hl?(Fj[nF9F9F^_nFbil@)31Fj
+[nF[hl4-Fahl6$&Fjio6$Fj[nF\\joFcjnC$-Fgjn6(FjqFijn%7reinit~#4,~event~c
+ode~GFj[nF_[oF\\_p>&Fd\\n6$Fj[nFjblF\\_p3/&Fd\\n6$Fj[nFiqF\\r/-Fean6$-
+Fi[o6$FganF]wFiqF9C$-Fgjn6(FjqFijnFa_pFj[nFb\\o&&FijmF^glFd\\o>Fc_pFa`
+p3Ff_p/-Fean6$-Fi[oFfanFiqF\\rC$-Fgjn6(FjqFijnFa_pFj[nF`]oFjfl>Fc_pFjf
+lC$-Fgjn6(FjqFijnFa_pFj[nFe]o,(FjflF9Fe`mFiy$\"#]F[blF9>Fc_pF`apOF]do/
+F_pQ+eventcountFjo@%5/F[_nF\\rFcamOF\\rO-F\\\\n6#&&&Fi_mFealFi`l6$F^_n
+FielOQ)procnameFjo@$/F^pFjflO7$Fjfl-F``m6$-Ffdo6#&&F]gl6#F`_lF]imF`im>
+Fe`m-F[_m6%1FjflF^pFjqFiq@$33/F_pF`am2F\\rFa[nF`[nC%>8&-Fa\\m6$FijmFiq
+>Fj[n&&FjcpFcgl6#F]qO7%&&Fjcp6#Fgbl6$Fj[nF\\r-F``m6$&Fddp6$Fj[nF^im/Fe
+`m;F9,(F`glF9FeglF[blFhglF[bl-F``m6$&&&Fjcp6#FjblFi`lF]im/Fe`m;,*F`glF
+9FeglF[blFhglF[blF9F9Ffgm@$4-Fahl6$FijmF[\\mC$>FijmF\\^p@$Fd^p?(Fj[nF9
+F9F^_nFbil@)Fg^pC$-Fgjn6(FjqFijn%7reinit~#5,~event~code~GFj[nF_[oF\\_p
+>Fc_pF\\_pFe_pC$-Fgjn6(FjqFijnFcfpFj[nFb\\oFa`p>Fc_pFa`pFd`pC$-Fgjn6(F
+jqFijnFcfpFj[nF`]oFjfl>Fc_pFjflC$-Fgjn6(FjqFijnFcfpFj[nFe]oF`ap>Fc_pF`
+ap@$0F_pF`amC$@$2F\\rF\\r@$-%<dsolve/numeric/checkglobalsG6&-Fcen6#&F]
+gl6#FfelFapF`glF`fl-Fhgm6(FdpF`flF`glF_^mFapFe`m@$/&Fbgl6#FdsF\\rYQinp
+arameters~must~be~initialized~before~solution~can~be~computedFjo>FjcpF
+[dp>F__mFe`mZ%>F]do-%9dsolve/numeric/SC/IVPrunG6$FjcpF^pFjoC$-Fgjn6%Fi
+q%-dsolve/debugG-%&printG6$%7Exception~in~solnproc:G&7#%.lastexception
+G6#;FiqF[blYFjo@%3/F]doF\\r2F[`l&F_dpFb[n>F^co&&&FjcpFealFi`lF_cn>F^co
+&Fddp6$F^dpF\\r@%50F]doF\\r1F_jpF\\r>&F\\glFi`lF^p>F\\[qF^co@&3Fdjo2F^
+coF^pC$>%)RoundingG,$%)infinityGF[bl@//F_jpF9Y6$Qcocannot~evaluate~the
+~solution~further~right~of~%1,~probably~a~singularityFjo-&FfdoFcep6#F^
+co/F_jpFiqY6$Qcqcannot~evaluate~the~solution~further~right~of~%1,~maxf
+un~limit~exceeded~(see~?dsolve,maxfun~for~details)FjoF[\\q/F_jpFjq@%/&
+F_dp6#FhyFjqYQfqcannot~evaluate~the~solution~past~the~initial~point,~p
+roblem~may~be~initially~singular~or~improperly~set~upFjoYQ_rcannot~eva
+luate~the~solution~past~the~initial~point,~problem~may~be~complex,~ini
+tially~singular~or~improperly~set~upFjo/F_jpFhpY6$Qfqcannot~evaluate~t
+he~solution~further~right~of~%1,~accuracy~goal~cannot~be~achieved~with
+~specified~'minstep'FjoF[\\q/F_jpF_rY6$Q\\rcannot~evaluate~the~solutio
+n~further~right~of~%1,~too~many~step~failures,~tolerances~may~be~too~l
+oose~for~problemFjoF[\\qF^jp@)/,&F_jpF9Fe_lF9F^_nY6$QOconstraint~proje
+ction~failure~on~event~at~t=%1FjoF[\\q/Fe]q,&F[hlF9FiqF9Y6$Qenindex-1~
+and~derivative~evaluation~failure~on~event~at~t=%1FjoF[\\q/Fe]q,&F[hlF
+9FjqF9Y6%QXmaximum~number~of~event~iterations~reached~(%1)~at~t=%2Fjo-
+F\\\\n6#&Fbjp6$F^_nFjqF[\\qC%@$0%7_Env_dsolve_nowarnstopGFbil-%7dsolve
+/numeric/warningG6#-_%,StringToolsG%.FormatMessageG6%Qgocannot~evaluat
+e~the~solution~further~right~of~%1,~event~#%2~triggered~a~haltFjoF[\\q
+-F\\\\n6#&Fbjp6$Fe]qF9>Fc[q.%(nearestG>F^pF^coY6$QQcannot~evaluate~the
+~solution~further~right~of~%1FjoF[\\q3Fdcn2F^pF^coC$>Fc[qFe[q@/Fg[qY6$
+Qbocannot~evaluate~the~solution~further~left~of~%1,~probably~a~singula
+rityFjoF[\\qF^\\qY6$Qbqcannot~evaluate~the~solution~further~left~of~%1
+,~maxfun~limit~exceeded~(see~?dsolve,maxfun~for~details)FjoF[\\qFb\\q@
+%Fd\\qYFh\\qYFj\\qF[]qY6$Qeqcannot~evaluate~the~solution~further~left~
+of~%1,~accuracy~goal~cannot~be~achieved~with~specified~'minstep'FjoF[
+\\qF_]qY6$Q[rcannot~evaluate~the~solution~further~left~of~%1,~too~many
+~step~failures,~tolerances~may~be~too~loose~for~problemFjoF[\\qF^jp@)F
+d]qYFg]qFi]qYF\\^qF^^qYFa^qC%@$Fi^q-F\\_q6#-F__q6%Qfocannot~evaluate~t
+he~solution~further~left~of~%1,~event~#%2~triggered~a~haltFjoF[\\qFd_q
+>Fc[qFi_q>F^pF^coY6$QPcannot~evaluate~the~solution~further~left~of~%1F
+joF[\\q@%/%-_EnvInFsolveGFbilC*>8+&F_dp6#Fis>Fibq%8_EnvDSNumericSaveDi
+gitsG>%6_Env_dsolve_SC_nativeGFbil@%/Fe\\qF9C$>Fe`mF9>Fe\\qFiq>Fe`mFe
+\\q>F^co-%9dsolve/numeric/SC/IVPvalG6%FjcpF^pF]do>Fe\\qFe`m>FibqFhbq7$
+F^p-F``m6$&F^coF]imF`imC%>FdeoFibq>F^co-Fgcq6%-Fa\\m6$FjcpFiqF^pF]doF[
+dqFjoFjoFjoX,Fbs6#FfdqFjo[gl!!%!!!\"\"!!!!\"+ix..Y7&%\"tG-%\"xG6#Fjdq-
+%\"yGF]eq-%(subvar1GF]eqFbp>8&&FQ6#Fjq>8*-%$mapG6$%$rhsG&FQ6#Fhp>8+,&-
+%%nopsG6#FceqF9F9F[bl>8'&FQ6#F9@$4-%%typeG6$FG.%(numericGC$@.-%'member
+G6$FM7:Q&startF5.%&startGQ'methodF5.%'methodGQ%leftF5.%%leftGQ&rightF5
+.%&rightGQ)leftdataF5Q*rightdataF5Q+enginedataF5Q*eventstopF5.%*events
+topGQ+eventclearF5.%+eventclearGQ,eventstatusF5.%,eventstatusGQ+eventc
+ountF5.%+eventcountGQ'laxtolF5.%'laxtolGQ'numfunF5.%'numfunG%%NULLGC$>
+8$-Fefq6#-%(convertG6$FM.%'stringG@(2F9-Fbfq6#7#FiiqOFiiq-F[gq6$Fiiq.%
+&arrayGO-%%evalG6$FiiqF90FiiqQ)procnameF5OFiiq-Fbgq6$FM7+Q%lastF5.%%la
+stGQ(initialF5.%(initialGQ+parametersF5.%+parametersGQ7initial_and_par
+ametersF5.%7initial_and_parametersGFfiqC%>FGF\\jq>Fiiq-Fefq6#FG@'/FGF[
+\\rO7#-%$seqG6$/&Fgeq6#8,&FiiqF_]r/F`]r;F9-Fbfq6#Fgeq/FGF^\\rO7$-F[]r6
+$/&Fceq6#,&F`]rF9F9F9&&FejqFgfqF]^r/F`]r;F\\rF_fq-F[]r6$/F^]r&&Fejq6#F
+iqF_]rFb]rO7#-F[]r6$/F\\^r&FiiqF]^rFa^r3-F[gq6$FG%\"=G-Fbgq6$-%$lhsGFe
+\\r7)Fh[rFi[rF[\\rF\\\\rF^\\rF_\\rFfiqC%>FG/-F]jq6$-Ff_rFLF_jq-F[fqFL@
+%-F[gq6$-F[fqFe\\r.%%listG>FiiqFd\\rYQfninitial~and/or~parameter~value
+s~must~be~specified~in~a~listF5@'/Fe_rFh[rOFj^r/Fe_rF[\\rOFi\\rOFh]r3F
+`_r-Fbgq6$Fe_r7+Q-eventdisableF5.%-eventdisableGQ,eventenableF5.%,even
+tenableGQ+eventfiredF5.%+eventfiredGQ*directionF5.%*directionGFfiqO-Fe
+fq6#Fj_r/FGQ.solnprocedureF5O-F][r6#Fefq/FGQ(sysvarsF5OFceq@%09!%(unkn
+ownGO-.F[crFLC%8)>Facr-%(pointtoG6#&&FQFh^r6#F\\rO-.FacrFLZ%C$>FiiqFd
+\\rFj^rF5YF5F5F5F5" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 0 "" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 34 "#eqution shown in soln is F^
+\{aug\}." }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 78 "#soln may has m
+ore than one solutions, you can use \"op\" to choose one of them." }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 0 "" }}}{EXCHG {PARA 0 "> " 0 "
+" {MPLTEXT 1 0 10 "soln(2.5);" }}{PARA 12 "" 1 "" {XPPMATH 20 "6#7#7&/
+%\"tG$\"#D!\"\"/-%\"xG6#F&$\"?W)>-Anb[9.Eqp%)f#!#H/-%\"yGF-$\"?8>'*>&=
+?6L5X;X?v'F0/-%(subvar1GF-$\"?gC#GlUz.&fF1'4U#>!#G" }}}{EXCHG {PARA 0 
+"> " 0 "" {MPLTEXT 1 0 60 "#the solution at time t=2.5, and its exact \+
+solution is y=x^2" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 0 "" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 0 "" }}}}{MARK "5 0 0" 14 }
+{VIEWOPTS 1 1 0 1 1 1803 1 1 1 1 }{PAGENUMBERS 0 1 2 33 1 1 }

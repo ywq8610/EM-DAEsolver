@@ -1,0 +1,292 @@
+
+# alpha : penalty factor
+# a:      random point
+# min alpha*z^2+ (x1-a1)^2+(x2-a2)^2  s.t.  f+z =0   
+
+cp_eqn:= proc(f,var,a,alpha)
+
+local Jac,sys;
+
+Jac:= LinearAlgebra[Transpose](VectorCalculus[Jacobian](f,var));
+sys:= alpha*Jac.Vector(f)+Vector(var)-Vector(a);
+sys:= convert(sys,list);
+
+end proc: 
+
+
+#-------------------------------
+#  {alpha*Jac*y+x - a, f-y}
+
+cp_2eqn:= proc(f,var,a,alpha)
+
+local Jac,sys,k,sys1,sys2, vy;
+k:= nops(f);
+Jac:= LinearAlgebra[Transpose](VectorCalculus[Jacobian](f,var));
+vy:= Vector([seq(cat(yy,i),i=1..k)]);
+sys1:= alpha*Jac.vy+Vector(var)-Vector(a); sys2:= Vector(f)-vy;
+sys1:= convert(sys1,list);  sys2:= convert(sys2,list); 
+sys:= [op(sys1),op(sys2)];
+
+end proc: 
+
+
+#-----------------------------
+cp0_eqn:= proc(f,var,a)
+
+local Jac,sys,vz;
+
+Jac:= LinearAlgebra[Transpose](VectorCalculus[Jacobian](f,var));
+vz:= Vector([seq(cat(zz,i),i=1..nops(f))]);
+sys:= Jac.vz-Vector(var)+Vector(a);
+sys:= convert(sys,list);
+sys:= [op(f),op(sys)];
+end proc:
+
+
+#-----------------------------
+cp1_eqn:= proc(f,var,a,alpha)
+
+local Jac,sys,vz;
+
+Jac:= LinearAlgebra[Transpose](VectorCalculus[Jacobian](f,var));
+sys:= alpha*Jac.Vector(f)+zz*(Vector(var)-Vector(a));
+sys:= convert(sys,list);
+sys:= expand([op(sys),zz^2 - add(f[j]^2,j=1..nops(f))]);
+end proc:
+
+
+
+#---------------------------------
+filter:= proc(f,sol,tol)
+
+local i, tmp, rsol;
+rsol:= [];
+for i from 1 to nops(sol) do
+    tmp:= max(map(abs, subs(sol[i],f)));
+    if tmp < tol then rsol:= [op(rsol), sol[i]]; end if: 
+end do:
+rsol;
+end proc: 
+
+
+
+#================================
+
+chgPt:= proc(f,var,x0,a,b)
+
+local N,n,H,Jac,c,dist,s,slist,qt,i,Jac1,delta,tau0,err,dat;
+n:= nops(var);
+H:= [seq( f[i]+(a[i]-b[i])*tau-a[i], i=1..n)];
+Jac:= VectorCalculus[Jacobian](f,var);
+c:= Vector(b)-Vector(a);
+dist:= Norm(c,2);
+N:= ceil(dist*100);
+s:= 1/N;
+
+#print(c,dist,N,s);
+
+slist:= x0;
+tau0:=0;
+err:= subs(tau=tau0,slist,H);   
+
+#print(N); 
+dat:= Matrix(N+1,n):
+dat[1,1..n]:= Vector(map(rhs,x0)); 
+
+qt:= Vector(map(rhs,x0));
+for i from 1 to N do         
+       Jac1:= subs(slist,Jac);       
+       delta:=  LinearSolve(Jac1, c);
+       qt:=VectorAdd(qt, delta, 1, s):
+       tau0:= tau0+s;
+       slist:= [seq(var[i]= qt[i], i=1..n),tau=tau0];        
+       err:= subs(slist,H);        
+ 
+       while max(map(abs,err))>1e-8 do           
+             Jac1:= subs(slist,Jac);
+             delta:=  LinearSolve(Jac1, Vector(err)); 
+             qt:=VectorAdd(qt, delta, 1, -1): 
+             slist:= [seq(var[i]= qt[i], i=1..n),tau=tau0];
+             err:= subs(slist,H);            
+        end do: 
+        print(i,slist);
+#print(i,t0);
+#print(slist,SingularValues(Jac1)[n]);
+   dat[i+1,1..n]:= Vector(map(rhs,slist[1..n])); 
+
+   end do:
+dat; 
+end proc:
+
+
+#================================
+
+chgPt_old:= proc(f,var,x0,a,b)
+
+local N,n,H,Jac,c,dist,s,slist,qt,i,Jac1,delta,t0,err;
+n:= nops(var);
+H:= [seq( f[i]+(a[i]-b[i])*t-a[i], i=1..n)];
+Jac:= VectorCalculus[Jacobian](f,var);
+c:= Vector(b)-Vector(a);
+dist:= Norm(c,2);
+N:= ceil(dist*100);
+s:= 1/N;
+
+slist:= x0;
+t0:=0;
+err:= subs(t=t0,slist,H);   
+
+#print(H);
+
+qt:= Vector(map(rhs,x0));
+for i from 1 to N do         
+       Jac1:= subs(slist,Jac);       
+       delta:=  LinearSolve(Jac1, c);
+       qt:=VectorAdd(qt, delta, 1, s):
+       t0:= t0+s;
+       slist:= [seq(var[i]= qt[i], i=1..n),t=t0];        
+       err:= subs(slist,H);        
+ 
+       while max(map(abs,err))>1e-8 do           
+             Jac1:= subs(slist,Jac);
+             delta:=  LinearSolve(Jac1, Vector(err)); 
+             qt:=VectorAdd(qt, delta, 1, -1): 
+             slist:= [seq(var[i]= qt[i], i=1..n),t=t0];
+             err:= subs(slist,H);            
+        end do: 
+        #print(slist);
+#print(i,t0);
+print(slist,SingularValues(Jac1)[n],err);
+
+   end do:
+
+[seq(var[i]=qt[i],i=1..n)];
+end proc:
+
+#================================
+
+chgAlpha:= proc(f,var,x0,a,alpha)
+
+local N,n,H,Hx,Ht,Hx1,Ht1,s,slist,qt,i,delta,t0,err,M;
+n:= nops(var);
+H:= expand(cp_eqn(f,var,a,1/t)*t);  # replace alpha by 1/t  
+
+Hx:= VectorCalculus[Jacobian](H,var);
+Ht:= -VectorCalculus[Jacobian](H,[t])[1..n,1];
+
+t0:= evalf(1/alpha);
+N:= 30;
+s:= 5/4;
+slist:= [op(x0),t=t0];
+err:= subs(slist,H);   
+qt:= Vector(map(rhs,x0));
+
+M:= [];
+for i from 1 to N do         
+       Hx1:= subs(slist,Hx);     
+       Ht1:= subs(slist,Ht);     
+       delta:=  LinearSolve(Hx1, Ht1);              
+       qt:=VectorAdd(qt, delta, 1, t0*(1-1/s)):
+       t0:= t0/s;
+       slist:= [seq(var[i]= qt[i], i=1..n),t=t0]; 
+
+       err:= subs(slist,f);
+#print(i,slist, delta,err);
+       #if max(map(abs,err)) < 1e-6 then break; fi:       
+       err:= subs(slist,H);
+       #print(i,SingularValues(Hx1));          
+
+       while max(map(abs,err))>1e-11 do           
+             Hx1:= subs(slist,Hx);
+             delta:= LinearSolve(Hx1, Vector(err)); 
+             qt:= VectorAdd(qt, delta, 1, -1): 
+             slist:= [seq(var[i]= qt[i], i=1..n),t=t0];
+             err:= subs(slist,H);
+             #print(slist,err);
+             #if i=1 then print(qt,SingularValues(Hx1));fi;
+        end do:
+
+   #print(t0,"point=",qt, "res=",subs(slist,f)); 
+   #M:= [op(M), [-log10(t0), log10(Norm(qt,2))] ]; 
+end do:
+
+#[seq(var[i]=qt[i],i=1..n)],M;
+[seq(var[i]=qt[i],i=1..n)];
+
+end proc:
+
+
+#------------------------------------
+
+NewtonIt:= proc(g,var,x0,tol)
+
+local i,n,Jac,J1,err,qt,delta,slist;
+n:=  nops(var);
+Jac:= VectorCalculus[Jacobian](g,var):  
+J1:=subs(x0,Jac); 
+err:= Vector(subs(x0,g));   
+qt:= Vector(map(rhs,x0));
+
+for i from 1 to 20 do
+    delta:= LeastSquares(J1, err);    
+    qt:= VectorAdd(qt, delta, 1, -1):  
+    slist:= [seq(var[i]= qt[i], i=1..n)];
+    J1:= subs(slist,Jac);
+    err:= Vector(subs(slist,g)); 
+    #print(i,delta,err);
+    if Norm(delta)< tol then break; fi: 
+end do:
+slist;
+end proc:
+
+#---------------------------------
+# to check if the real solutions of a sys f(x) = 0 is an empty set
+#  if empty then  output = 1; otherwise return 0 it maybe empty 
+
+IsEmpty:= proc(sys,var)
+
+local i,n,m,f,g,a,k,vars,mu,sol,flag,alpha,mu1;
+n:= nops(var);
+m:= nops(sys);
+
+f:= [seq(Groebner[Homogenize](sys[i],zz0),i=1..m),  add(var[i]^2,i=1..n)+zz0^2-1];
+a:= [seq(rand()/10.0^12-0.5,i=1..n),0];
+k:= sqrt(add(a[i]^2,i=1..n));
+a:= a/k*0.5;   # the norm of a is 0.5
+vars:= [op(var),zz0];
+
+
+print(f,a);
+
+alpha:=10^5;
+for k from 1 to 1 do
+    mu:= alpha*add(f[i]^2,i=1..m+1) + add((vars[i]-a[i])^2,i=1..n+1);
+    g:=cp_eqn(f,vars,a,alpha);
+    sol:= run_Hom4PS(g,vars);
+
+    flag :=1;
+    for i from 1 to nops(sol) do 
+        mu1:= subs(sol[i],mu);         
+        if mu1 < 4 then
+           print(alpha, mu1,sol[i],subs(sol[i],f));  
+           flag:= 0;   
+           alpha:= alpha*2;
+           break;
+        end if:
+    end do;
+    if flag=1 then        
+       return 1;
+    end if:
+end do:
+#print(alpha);
+
+#------------------  it may have real soln , next we should check that ---
+#alpha:=10000;
+#g:=cp_eqn(sys,var,a[1..n],alpha);
+#sol:= run_Hom4PS(g,var);
+#mu:= alpha*add(sys[i]^2,i=1..m) + add((var[i]-a[i])^2,i=1..n);
+#print(sol, [seq(subs(sol[i],mu),i=1..nops(sol))] );
+
+end proc:
+
+  

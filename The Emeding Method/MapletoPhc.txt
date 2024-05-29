@@ -1,0 +1,75 @@
+
+ # with(DEtools):
+ MapletoPhc:= proc(maplesys,u,var,order)
+
+ # maplesys: pde syetem
+ # u: depentant variable
+ # var::list : indepentant var
+ # order: order of pde 
+ 
+ local mapledifflist,maplejetvars,Q,subslist,phcnot,phcjetvars,MapleToPHClist,phcsys;
+ 
+ mapledifflist:= DEtools[checkrank]([u(op(var))], degree = order);
+ Q:= diffalg[differential_ring] (derivations = var, ranking = [u], notation = diff);  
+ maplejetvars:= map( z -> diffalg[denote](z, jet, Q), mapledifflist); 
+ subslist := seq(mapledifflist[j]=maplejetvars[j], j = 1 .. nops(mapledifflist)); 
+phcnot:= z -> cat(op(0, z), op(z)); 
+phcjetvars:= map(phcnot,maplejetvars); 
+
+#print(maplejetvars,phcjetvars);
+
+MapleToPHClist := [seq(mapledifflist[j]=phcjetvars[j], j = 1 .. nops(phcjetvars))]; 
+phcsys:= subs(MapleToPHClist, maplesys);
+
+phcsys;
+
+end proc;
+
+#--------------------------------------------------------------------------
+ PhctoMaple:= proc(phcsys,u,var,order)
+
+ # phcsys: poly syetem
+ # u: depentant variable
+ # var::list : indepentant var
+ # order: order of pde 
+ 
+ local mapledifflist,maplejetvars,Q,subslist,phcnot,phcjetvars,PhctoMaplelist ,maplesys;
+ 
+ mapledifflist:= DEtools[checkrank]([u(op(var))], degree = order);
+ Q:= diffalg[differential_ring] (derivations = var, ranking = [u], notation = diff);  
+ maplejetvars:= map( z -> diffalg[denote](z, jet, Q), mapledifflist); 
+subslist := seq(mapledifflist[j]=maplejetvars[j], j = 1 .. nops(mapledifflist)); 
+phcnot:= z -> cat(op(0, z), op(z)); phcjetvars:= map(phcnot,maplejetvars); 
+PhctoMaplelist := [seq(phcjetvars[j]=mapledifflist[j], j = 1 .. nops(phcjetvars))]; 
+maplesys:= subs(PhctoMaplelist, phcsys);
+
+maplesys;
+
+end proc;
+
+##################
+
+MapletoPhc_a:= proc(maplesys,dvars,indvars,order)
+
+local i,tmp;
+
+tmp:= maplesys;
+for i from 1 to nops(dvars) do
+    tmp:= MapletoPhc(tmp,dvars[i],indvars,order);
+end do;
+tmp:
+end proc;
+
+####################
+
+PhctoMaple_a:= proc(phcsys,dvars,indvars,order)
+
+local i,tmp;
+
+tmp:= phcsys;
+for i from 1 to nops(dvars) do
+    tmp:= PhctoMaple(tmp,dvars[i],indvars,order);
+end do;
+tmp:
+end proc;
+

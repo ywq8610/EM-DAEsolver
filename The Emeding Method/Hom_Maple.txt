@@ -1,0 +1,364 @@
+# 
+# vars := [X, Y1, Y3, Z1, Z3, k, v1, v10, v2, v3, v4, v5, v6, v7, v8, v9, k3, k5]
+# ord:= get_var_ord(outinfo,vars);
+# ord := [1, 5, 2, 3, 6, 6, 18, 4, 13, 11, 14, 7, 9, 15, 16, 10, 8, 12]
+# search k  will get the positions of k3 or k5 
+
+
+
+with(ListTools):
+
+#----------------------------------
+# call Hom4PS to solve poly sys
+
+run_Hom4PS:= proc(sys, vars,output::string := "R")
+
+	local sr, infile,cmd, sol, str, outinfo,ord;
+	sr := convert(rand(),string):
+           
+	Hom4PS_Input(sys,sr);        
+        infile := `in`||sr||`.txt`: 
+        cmd:= `hom4ps2 `||infile;    
+        str:= get_time():      
+        system(cmd):
+#print(cmd); 
+        fopen(infile,READ):
+#print(%,currentdir()); 
+        readbytes(infile,infinity,TEXT):
+        outinfo:=%;     
+        outinfo:=convert(%,string):  
+        fclose(infile): 
+        ord:= get_var_ord(outinfo,vars);
+#print(ord);
+
+#print("time (seconds) used for solving poly system:", get_time() - str);         
+        #fremove(infile):
+         
+        if output="R" then
+           sol:= readrealsol(vars,ord);
+        else
+           sol:= readsol(vars,ord);
+        end if:
+#print("The # of real solutions is:", nops(sol));
+        #fremove(`data.roots`):
+        sol;       
+
+end proc:      
+
+#---------------------------------
+get_var:= proc(ins::string,invar)
+
+  local var,i,str,loc,varord,ord;
+  for i from 1 to nops(invar) do
+      str:=convert(invar[i],string);
+      loc[i]:=searchtext(str,ins);
+  end do:    
+  loc:=convert(loc,list);
+  varord:=sort(loc);
+  ord:=[seq(Search(varord[i], loc),i=1..nops(loc))];  
+  var:= [seq(invar[ord[i]],i=1..nops(loc))]; 
+end proc:
+
+
+#---------------------------------
+get_var_ord:= proc(ins::string,invar)
+
+  local var,i,str,loc,varord,ord;
+  for i from 1 to nops(invar) do
+      str:=convert(invar[i],string);
+      loc[i]:=searchtext(str,ins);
+  end do:    
+  loc:=convert(loc,list);
+  varord:=sort(loc);
+  ord:=[seq(Search(varord[i], loc),i=1..nops(loc))];     
+end proc:
+
+ 
+
+#==============================
+Hom4PS_Input:= proc(sys::list,filename) 
+ 	local i, n, indL, F, semcol, infile,sp;         
+        semcol:= `;`:
+ 	indL := indets(sys); 
+ 	n := nops(sys); 
+        infile := `in`||filename||`.txt`: 
+        fopen(infile,WRITE):
+        fprintf(infile,`{\n`):
+	for i to n do             
+            sp:= convert(sys[i],string):                             
+            fprintf(infile,`%s`,sp):
+            fprintf(infile,`%s\n`,`;`):             
+        end do; 
+        fprintf(infile,`}\n`):
+        fclose(infile):        
+end proc;
+
+#----------------------------------------
+# read the data.roots to maple
+readsol:= proc(vars,ord)
+
+  local loc,loc_end, filename,outinfo, seg, sol,ans;
+  sol:= [];
+  filename:= `data.roots`;
+#print("before read data.roots");
+  fopen(filename,READ):
+  readbytes(filename,infinity,TEXT):
+  outinfo:=%;     
+  outinfo:=convert(%,string):  
+  fclose(filename): 
+# print(outinfo); 
+ 
+  loc:=searchtext("(",outinfo);
+  
+  if loc=0 then return outinfo; end if:
+
+
+  while loc <> 0 do   
+    loc_end:=searchtext(" The residual",outinfo);
+    seg:= substring(outinfo, loc..loc_end-2);
+    sol:= [op(sol),read1sol(seg,vars,ord)];    
+    outinfo:= substring(outinfo, loc_end+20..-1);
+    loc:=searchtext("(",outinfo);
+  end do:
+  sol; 
+end proc:
+
+#------- 
+# read the data.roots to maple
+readrealsol:= proc(vars,ord)
+
+  local loc,loc_end, filename,outinfo, seg, sol,ans;
+  sol:= [];
+  filename:= `data.roots`;
+#print("before read data.roots");
+  fopen(filename,READ):
+  readbytes(filename,infinity,TEXT):
+  outinfo:=%;     
+  outinfo:=convert(%,string):  
+  fclose(filename): 
+#print(outinfo); 
+ 
+  loc:=searchtext("(",outinfo);
+  
+  #if loc=0 then return outinfo; end if:
+  if loc=0 then return []; end if:
+
+  while loc <> 0 do   
+    loc_end:=searchtext(" The residual",outinfo);
+    seg:= substring(outinfo, loc..loc_end-2);
+    sol:= [op(sol),read1realsol(seg,vars,ord)];    
+    outinfo:= substring(outinfo, loc_end+20..-1);
+    loc:=searchtext("(",outinfo);
+  end do:
+  sol; 
+end proc:
+
+
+#-------------------------------------------------------
+# convert each segment to a list
+
+read1sol:= proc(in_seg::string, vars, ord)
+
+ local i, seg, loc, loc_end, n, sol, onecoord;
+ n:= nops(vars);
+ seg:= in_seg;
+
+ #print(in_seg,vars);
+
+ for i from 1 to n do 
+     loc:=searchtext("(",seg)+1;   
+     loc_end:=searchtext(")",seg)-1;
+     onecoord:= substring(seg,loc..loc_end);  
+     onecoord:= sscanf(onecoord, "%f ,%f");
+     sol[ord[i]]:= vars[ord[i]]= onecoord[1]+ onecoord[2]*I;
+     seg:= substring(seg, loc_end+2..-1);
+ end do:
+ sol:=convert(sol,list);
+end proc:
+
+ 
+
+#---- 
+# convert each segment to a list  if the root is real!
+
+read1realsol:= proc(in_seg::string, vars, ord)
+
+ local i, seg, loc, loc_end, n, sol, onecoord;
+ n:= nops(vars);
+ seg:= in_seg;
+
+ #print(in_seg,vars);
+
+ for i from 1 to n do 
+     loc:=searchtext("(",seg)+1;   
+     loc_end:=searchtext(")",seg)-1;
+     onecoord:= substring(seg,loc..loc_end);  
+     onecoord:= sscanf(onecoord, "%f ,%f");
+     if abs(onecoord[2]) > 1e-2 then return NULL; fi: 
+     sol[ord[i]]:= vars[ord[i]]= onecoord[1];
+     seg:= substring(seg, loc_end+2..-1);
+ end do:
+ sol:=convert(sol,list);
+end proc:
+
+
+
+ 
+#---------------------------------
+# get the windows time 
+
+get_time:= proc()
+
+     local tt,h,m,s,cpu_time;
+     cpu_time:= StringTools[FormatTime]("%r");
+#print(cpu_time);
+     h:=substring(cpu_time, 1..2);
+     if h[1]=" " then h:=h[2]; fi:
+ 
+     tt:= convert(h,decimal,10)*3600; 
+     m:=substring(cpu_time, 4..5);
+     tt:= tt+ convert(m,decimal,10)*60;  
+     s:= substring(cpu_time, 7..8);
+     tt:= tt+ convert(s,decimal,10);
+end proc: 
+
+  
+
+    
+
+#-------------------------------------
+#  read the MixedCell.dat 
+
+readMV:= proc(n)
+
+	local MV, NumCell, cells, i, ed, edge, k,temp,
+              loc,loc_end, filename,outinfo, seg, sol,ans, supp, format;
+  	sol:= [];
+  	filename:= `MixedCell.dat`;
+  	fopen(filename,READ):
+  	readbytes(filename,infinity,TEXT):
+  	outinfo:=%;     
+  	outinfo:=convert(%,string):  
+  	fclose(filename): 
+
+        loc:= searchtext("=",outinfo) + 1; 
+        loc_end:= searchtext("\n",outinfo, loc..loc+20) + loc-2; 
+      
+        NumCell:= outinfo[loc..loc_end];        
+        NumCell:= sscanf(NumCell,"  %d")[1];
+        #printf(" \t the number of mixed cells: %d ", NumCell);
+
+        loc:= searchtext("=",outinfo, loc_end..loc_end+30) + loc_end;  
+        loc_end:= searchtext("\n",outinfo, loc..loc+20) + loc-2; 
+        
+        MV:= outinfo[loc..loc_end];        
+        MV:= sscanf(MV, "  %d")[1];
+        printf("\t  Mixed Volume: %d", MV);
+
+        loc:=  loc_end;
+        loc_end:= searchtext("==========>", outinfo);   
+ 
+        outinfo:= outinfo[loc..loc_end];
+     
+        loc:= searchtext("-th cell:", outinfo);  
+        
+        cells:= Matrix(n,2*NumCell);
+ 
+        #print(outinfo);      
+        k:= 0;
+        while loc > 0 do            
+              loc_end:= searchtext("-th cell:", outinfo[loc+9..-1])+loc;
+              if loc_end <= loc then 
+                 loc_end:= searchtext("Label", outinfo[loc+1..-1])+loc;
+                 seg:= outinfo[loc+18..loc_end];
+                 for i from 1 to n do
+                  ed:= searchtext("\n", seg);
+                  edge:= seg[1..ed-1];
+                  seg:= seg[ed+2..-1];                   
+                  temp:= sscanf(edge,"%d   %d");                  
+                  cells[i,k+1]:= temp[1]; 
+                  cells[i,k+2]:= temp[2];                  
+                 end do;   
+                 break; 
+              end if;  
+             
+              seg:= outinfo[loc+18..loc_end];
+
+               
+              for i from 1 to n do
+                  ed:= searchtext("\n", seg);
+                  edge:= seg[1..ed-1];
+                  seg:= seg[ed+2..-1];                   
+                  temp:= sscanf(edge,"%d   %d");                   
+                  cells[i,k+1]:= temp[1]; 
+                  cells[i,k+2]:= temp[2];                  
+              end do;   
+              k:= k+2;       
+              loc:= loc_end;
+        end do:                         
+         
+        loc:= loc_end+16;
+          
+        outinfo:= outinfo[loc..-1];
+        
+      
+        format:= "  %d";
+        for i from 1 to n-1 do format:= "   %d"||format; od;
+        
+        supp:= [];
+         
+        loc:=  searchtext(":", outinfo);
+        while loc > 0 do              
+	      loc_end:=  searchtext("\n", outinfo);                              
+              seg:= outinfo[loc+1..loc_end-1];              
+              supp:= [op(supp), sscanf(seg,format)];                              
+              outinfo:= outinfo[loc_end+2..-1];
+              loc:=  searchtext(":", outinfo);
+        end do:    
+        
+        return cells, supp;
+end proc:
+
+
+#----------------------------------
+# call Hom4PS to compute the mixed vol  
+
+run_MixedVol:= proc(sys, vars)
+
+	local sr, infile,cmd, sol, str, filename;
+
+	sr := convert(rand(),string):
+	Hom4PS_Input(sys,sr);
+        infile := `in`||sr||`.txt`: 
+        cmd:= `mixedvol `||infile;     
+        str:= get_time();         
+        system(cmd); 
+        #printf("time used for computing the mixed volume of poly system: %f \t", get_time() - str);         
+        fremove(infile):
+        
+        
+        readMV(nops(vars));
+        #print("The # of solutions is:", nops(sol));
+        #fremove(`data.roots`):
+             
+
+end proc:      
+
+
+#--------------------------------------
+
+realSoln:= proc(sol)
+ local n,i,realsol,t,temp,var;
+ if sol=[] then return []; fi:
+ n:= nops(sol);
+ realsol:=[];
+ var:= map(lhs,sol[1]);
+ for i from 1 to n do    
+     t:=max(map(abs,map(Im,map(rhs,sol[i]))));
+     if t< 1e-4 then 
+        temp:= map(Re,map(rhs,sol[i]));
+        realsol:= [op(realsol), [seq(var[j] = temp[j],j=1..nops(var) )] ];
+     end if:
+ end do:
+ realsol;
+end proc:

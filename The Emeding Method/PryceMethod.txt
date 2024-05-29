@@ -1,0 +1,142 @@
+#The $\Sigma$- Method by Pryce
+#################################
+with(PDEtools): with(Optimization); with(LinearAlgebra):
+
+ Difford:= proc(eqn, indepvar, depvar) 
+ local z;
+ if not(has(eqn, depvar)) then return(-10000) end if;
+ difforder(map(z -> if has(z, depvar) then z else NULL end if, indets(eqn, function), indepvar));
+ end proc:
+
+ PossibleDepvars:= proc(sys, indepvar)  
+ local z;
+ convert(map(z -> if difforder(z,indepvar)=0 then z else NULL end if, indets(sys, function)), list); 
+ end proc:
+
+ SigMatrix:= proc(F,dvar,indvar)
+  local i,j,M,n;
+  n:= nops(dvar): 
+  M:=Matrix(n,n):
+  for i from 1 to n do
+      for j from 1 to n do
+          M[i,j]:= Difford(F[i],indvar,dvar[j]):
+          #print(%):
+      end do:  
+  end do:
+  M;
+  end proc:
+
+ GenerateCons:= proc(SM,n)
+ local i,j,cons;
+ cons:={}:
+ for i from 1 to n do
+     for j from 1 to n do
+         cons:={op(cons), d[j]- c[i] >= SM[i,j]};
+     end do:
+ end do:
+ convert(cons,set):
+ end proc:  
+
+#-------  generate partial porlongation ---------------
+ NewSys:= proc(F,sol)
+ local i,k,j,n, DF,Dindex:
+ DF:= [];
+ n:= nops(F):
+ Dindex:= [seq(getindex(sol,i),i=1..n)];
+ k:= max(op(Dindex));
+ for i from 1 to k do
+     #print(DF):
+     for j from 1 to n do
+         if Dindex[j]>0 then  
+            DF:= [op(DF),diff(F[j],t$Dindex[j])];
+            Dindex[j]:= Dindex[j] - 1 ; 
+         elif Dindex[j] = 0 then 
+            DF:= {op(DF),F[j]};
+         end if
+     end do:
+ end do:
+ DF;
+ end proc: 
+
+#-------  generate partial porlongation with block structure ---
+ NewSys_b:= proc(F,sol)
+ local i,k,j,n, DF,Dindex:
+ 
+ n:= nops(F):
+ Dindex:= [seq(getindex(sol,i),i=1..n)];
+ k:= max(op(Dindex));
+ for i from 1 to k+1 do
+     DF[i]:= [];
+     #print(DF,Dindex):
+     for j from 1 to n do
+         if Dindex[j]>0 then  
+            DF[i]:= [op(DF[i]),diff(F[j],t$Dindex[j])];
+            Dindex[j]:= Dindex[j] - 1 ; 
+         elif Dindex[j] = 0 then 
+            DF[i]:= [op(DF[i]),F[j]];
+            Dindex[j]:= Dindex[j] - 1 ; 
+         end if
+     end do:
+ end do:
+ convert(DF,list);
+ end proc: 
+
+
+#-------------------------------------------
+ getindex:=proc(sol,i)
+ local k;
+ for k from 1 to nops(sol) do
+     if lhs(sol[k])=c[i] then return rhs(sol[k]); break; fi:
+ end do:
+ k;
+ end proc:
+
+ getord:=proc(sol,i)
+ local k;
+ for k from 1 to nops(sol) do
+     if lhs(sol[k])=d[i] then return rhs(sol[k]); break; fi:
+ end do:
+ k;
+ end proc:
+
+
+#---------------- Jac matrix of top block --------------
+JacM:= proc(F,Depvars,sol)
+ local J,i,j,n,k,Dord,Dindex,var,uu;
+ n:= nops(F):
+ Dord:= [seq(getord(sol,i),i=1..n)];
+ Dindex:= [seq(getindex(sol,i),i=1..n)];
+ J:= Matrix(n,n):
+ for i from 1 to n do 
+     for j from 1 to n do
+         # print(i,j,J);  
+         k := Dord[j]-Dindex[i]:
+         if  k > 0 then
+            var:= diff(Depvars[j](t),t$k); 
+            #print(i,j,var);
+            J[i,j]:= subs(uu=var,diff(subs(var=uu,F[i]),uu)):
+         elif k = 0 then 
+            J[i,j]:= subs(uu=Depvars[j](t),diff(subs(Depvars[j](t)=uu,F[i]),uu)):
+         else J[i,j] := 0:
+         end if:   
+     end do:
+ end do:
+ J;
+ end proc:       
+
+############################### 
+# main algorithm for DAE
+###############################
+Pryce:= proc(F,L)
+ local n,SM,cons,dim,sol,i;
+ n:= nops(L);
+ if nops(F) <> n then error("Pryce does not apply :  # eqn =", nops(F), "not equal to # vars", n): fi:   
+
+ SM:= SigMatrix(F,L,t):
+ cons:= GenerateCons(SM,n);
+ dim:= sum(d[i]-c[i],i=1..n);
+ sol:=LPSolve(dim,cons,assume = nonnegint ); 
+ end proc:
+
+
+

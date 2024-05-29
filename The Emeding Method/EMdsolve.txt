@@ -1,0 +1,252 @@
+#20240315 edition
+#####***Import***################
+#restart;with(LinearAlgebra):with(DETools):with(VectorCalculus): with(Groebner):
+#with(PDEtools): with(Optimization): with(RandomTools)：
+#Digits:= 30:
+#read "PryceMethod.txt": read "MapletoPhc.txt": read "Hom_Maple.txt":   read "GCP.txt":read "EMdsolve.txt":
+##***For Example**
+#eqn := [2*y(t)*(diff(x(t), t))-x(t)*(diff(y(t), t))- x(t)+sin(t)+2, y(t)-x(t)^2];
+#var:=[x,y];invar:=t;t0:=0;
+#soln:=EMdsolve(eqn,var,invar,t0);
+#soln(2);
+###############################
+#The Embeding  Method for Degenerated Differential-Algebraic Equations
+###############################
+EMdsolve:=proc(eqn_0::list,var_0::list,invar_0::symbol,t0::numeric,initial_c::list,err_0::numeric)
+###declare
+local sol,DF,M,m,n,r,eqn_new,sys,initial,initial_0,goal,ord,eqn,var,invar,err,var_m,xx;
+global soln;
+###initial
+
+#subject varants
+n:=nops(var_0);
+var:=[seq(cat(xx,i),i=1..n)];
+invar:=invar_0;eqn:=subs(seq(var_0[i]=cat(xx,i),i=1..n),eqn_0);
+sys:=[];#condition equations
+
+soln:=[];
+
+###check input
+if nargs<4 then return(-10000);  
+elif nargs<=5 then err:=1e-10; 
+else err:=err_0 ;
+end if:
+
+
+if nops(eqn) <> n then error(" Embedding Method does not apply :  # eqn =", nops(eqn), "not equal to # vars", n): fi:  
+
+### main
+sol:=Pryce(eqn,var);
+#deal with d=0
+
+DF:=NewSys_b(eqn,sol[2]);
+
+
+
+#Jacobi and initial
+M:=JacM(eqn,var,sol[2]);  
+ord:=max([seq(getord(sol[2],i),i=1..n)]);
+M:=MapletoPhc_a(M,var,[invar],ord);
+M:=subs(invar=t0,M);
+sys:=map(op,DF[2..nops(DF)]);
+
+if nargs=5 then initial_0:=intial_c;
+else initial_0:=sol_H(sys,sol[2],var,invar,t0,ord);
+end if:
+
+Embedding(eqn,var,invar,t0,err,sol,DF,M,n,initial_0,sys);
+
+
+return subs(seq(cat(xx,i)=var_0[i],i=1..n),op(soln));
+
+end proc:
+#############################
+#IMsolve_numeric
+Embedding:=proc(eqn0,var0,invar0,t00,err0,sol0,DF0,m0,n0,initial0,sys0)
+local eqn_new,sys,initial_0,ord,varList,i,j,numList,temp_var,eqn,var,invar,t0,err,sol,DF,m,n,initial,r,piv1,r1,piv2,circle,M;
+global soln;
+eqn:=eqn0;var:=var0;invar:=invar0;t0:=t00;err:=err0;sol:=sol0;DF:=DF0;m:=m0;n:=n0;initial_0:=initial0;sys:=sys0;
+
+circle:=nops(initial_0);
+if circle=0 then  error(" condition equation has no solution") fi:
+ord:=max([seq(getord(sol[2],i),i=1..n)]);
+
+for j from 1 to circle do:
+
+initial:=op(j,initial_0);
+m:=subs(invar=t0,m);
+m:=subs(initial,m);
+M:=Determinant(m);#print(M);
+
+while (type(M,numeric) and abs(M)<err) do
+
+#QR->equations and varants
+r,piv1:=QrtoPiv(m,1e-5*err);#varant
+r1,piv2:=QrtoPiv(LinearAlgebra:-Transpose(m),1e-5*err);#equation
+if r<>r1 then  error("Jacobi Matrix is not square"):fi:
+
+#subjection
+eqn:=[seq(DF[1][piv2(i)],i=1..r)];eqn_new:=DF[1];
+varList:=[seq(cat(subvar,i),i=1..r)];
+numList:=Generate(list(integer(range = 1 .. 100), n-r));
+for i from 1 to n do
+if op(sol[2][n+piv1(i)])[2] =0 then
+if i<=r then
+eqn_new:=subs(diff(var[piv1(i)](invar),t$op(sol[2][n+piv1(i)])[2])=varList[i](invar),eqn_new);
+else
+eqn_new:=subs(diff(var[piv1(i)](invar),t$op(sol[2][n+piv1(i)])[2])=numList[i-r],eqn_new);
+fi:
+else
+if i <= r then 
+eqn_new := subs(diff(var[piv1(i)](invar), `$`(t, op(sol[2][n+piv1(i)])[2])) = varList[i](invar), eqn_new) 
+else 
+eqn_new := subs(diff(var[piv1(i)](invar), `$`(t, op(sol[2][n+piv1(i)])[2])) = numList[i-r], eqn_new)
+fi:
+fi:
+end do:
+
+
+
+
+#conbination
+eqn:=[op(eqn_new),op(eqn)];n:=n+r;
+var:=[op(var),op(varList)];
+sol:=Pryce(eqn,var);
+
+DF:=NewSys_b(eqn,sol[2]); 
+
+
+#Jacobi and initial
+ord:=max([seq(getord(sol[2],i),i=1..n)]);
+sys:=[op(sys),op(map(op,DF[2..nops(DF)]))]; 
+m:=JacM(eqn,var,sol[2]);
+m:=MapletoPhc_a(m,var,[invar],ord);
+m:=subs(invar=t0,m);
+eqn:=DF[1]:
+initial_0:=sol_H(sys,sol[2],var,invar,t0,ord);
+print(eqn);
+#depth search
+Embedding(eqn,var,invar,t0,err,sol,DF,m,n,initial_0,sys);
+if j=circle then return op(soln) fi:
+end do:
+
+
+var:=map(var,t);
+initial:=initial_0[j];
+temp_var:=[op(indets(initial,name))];
+initial:=PhctoMaple_a(initial,temp_var,[invar],ord);
+initial:=subs(t=t0,convert(initial, D));
+soln:=[op(soln),[dsolve({op(eqn),op(initial)},var,type=numeric)]];
+
+
+end do:
+
+return soln;
+
+end proc:
+######################
+#solve Hom4PS
+sol_H:=proc(DF,sol,var,invar,t0,ord)
+local initial,sys,temp_var;
+sys:=DF;
+sys:=sort(MapletoPhc_a(sys,var,[invar],ord));
+sys:=evalf(subs(invar=t0,sys));
+temp_var:=Mapletovar(var,invar,sol);
+sys:=expand(cp0_eqn(sys,temp_var,Generate(list(float(range = -1 .. 1), nops(temp_var)))));
+sys:=subs(x=x0,sys);
+temp_var:=subs(x=x0,temp_var); 
+initial:=run_Hom4PS(sys,temp_var);
+initial:=subs(x0=x,initial);
+
+initial;
+
+
+end proc:
+########################
+#varants translated
+Mapletovar:=proc(var,invar,sol)
+local n,i,mapledifflist,Q,maplejetvars,phcnot,phcjetvars;
+n:=nops(var);
+mapledifflist:=[];
+for i from 1 to n do
+if rhs(sol[i+n])>0 then 
+mapledifflist:=[op(mapledifflist),op(DEtools[checkrank]([var[i](op([invar]))], degree =rhs(sol[i+n])-1))];
+fi:
+end do:
+Q:= diffalg[differential_ring] (derivations = [invar], ranking = [var], notation = diff);  
+maplejetvars:= map( z -> diffalg[denote](z, jet, Q), mapledifflist); 
+phcnot:= z -> cat(op(0, z), op(z)); phcjetvars:= map(phcnot,maplejetvars); 
+
+phcjetvars;
+ 
+end proc:
+
+###########################
+#QR
+QrtoPiv:=proc(J,err)
+local n,m,c,r,k,tau,piv,i,j,f,v,beta,Jac;
+Jac:=J;
+m,n:=Dimension(Jac):f:=j->j:
+c:=Matrix(1,n):piv:=Vector[row](n,f):
+for i from 1 to n do
+c[1,i]:=LinearAlgebra:-Transpose(Jac[1..m,i]).Jac[1..m,i];
+end do:
+r:=0:tau:=max(c[1,1..n]):
+while evalf(tau)>err and r<n do
+r:=r+1:k:=max_index(c[1,r..n])+r-1:
+piv:=ColumnOperation(piv,[r,k]):
+Jac:=ColumnOperation(Jac,[r,k]):c:=ColumnOperation(c,[r,k]):
+v,beta:=House(Jac[r..m,r]):
+Jac[r..m,r..n]:=evalf(simplify(Matrix((IdentityMatrix(m-r+1)-beta*v.LinearAlgebra:-Transpose(v)).Jac[r..m,r..n])));
+Jac[r+1..m,r]:=evalf(simplify(Matrix(v[2..m-r+1])));
+for i from r+1 to n do
+c[1,i]:=simplify(c[1,i]-Jac[r,i]^2);
+end do:
+tau:=max(c[1,r+1..n]):
+end do:
+return r,piv;
+end proc:
+
+###########################
+#House
+House:=proc(x)
+local n,v,beta,d,u,temp:
+temp:=x[1]:
+n:=Dimension(x):
+d:=LinearAlgebra:-Transpose(x[2..n]).x[2..n]:
+v:=x:v[1]:=1:
+if d=0 and temp>=0 then
+beta:=0:
+elif d=0 and temp<0 then
+beta:=-2:
+else 
+u:=sqrt(temp^2+d):
+   if temp<=0 then
+       v[1]:=temp-u:
+      else
+          v[1]:=-d/(temp+u):
+  end if:
+beta:=simplify(2*v[1]^2/(d+v[1]^2)):
+v:=simplify(v/v[1]):
+end  if:
+
+return v,beta;
+
+end proc:
+##############################
+#max[index]
+max_index:=proc(x)
+local i,n,temp;
+n:=Dimension(x);
+temp:=max(x);
+for i from 1 to n do
+if temp=x[i] then 
+break;
+end if:
+end do:
+return i;
+end proc:
+
+
+
+
