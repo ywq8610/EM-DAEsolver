@@ -6,7 +6,7 @@ Therefore, to achieve the effects of all the examples in this article, it is nec
 
 (1) Solution code for nonlinear DAE: Oki Taihe's（https://github.com/OptMist-Tokyo/DAEPreprocessingToolbox. ）. 
 
-(2) Solving all consistent initial values of polynomial constraints: Using the Homotopy Continuation Algorithm HOM4PS-2.0 by Li Zongyi（https://www.math.nsysu.edu.tw/~Leetsung/) for solving. It should be noted that the home4ps2.bat file and bin folder should be installed in the folder of the Embedding method in MAPLE. 
+(2) Solving all consistent initial values of polynomial constraints: Using the Homotopy Continuation Algorithm HOM4PS-2.0 by Li Zongling（https://www.math.nsysu.edu.tw/~Leetsung/) for solving. It should be noted that the home4ps2.bat file and bin folder should be installed in the folder of the Embedding method in MAPLE. 
 
 
 This code provides the code and experimental results for all the examples involved in the article. Users can implement it themselves based on the flowchart for further work. 
