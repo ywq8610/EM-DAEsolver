@@ -1,4 +1,4 @@
-This code is the program implementation of the article of  Wenqiang Yang, Wenyuan Wu, Greg Reid's article "Embedding Method by Real Numerical Algebraic Geometry" for Structurally Unamenable Differential-Algebraic Equations”. It is based on the MAPLE software. 
+This code is the program implementation of the article of  Wenqiang Yang, Wenyuan Wu, Greg Reid's article "Embedding Method by Real Numerical Algebraic Geometry for Structurally Unamenable Differential-Algebraic Equations”. It is based on the MAPLE software. 
 
 
 To facilitate comparative experiments and demonstrate the advantages of the examples, Oki Taihe's program code is used, and numerical solutions for DAE are implemented based on the same DAE solving environment and program in Matlab.
